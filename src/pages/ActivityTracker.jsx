@@ -6,19 +6,13 @@ import LoadingSpinner from '../components/ui/LoadingSpinner'
 const DAYS_PL = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Nd']
 const DAYS_FULL = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela']
 const WEEKS = [1, 2, 3, 4]
-const WEEK_COLORS = [
-  { border: 'border-rose-300', bg: 'bg-rose-50', text: 'text-rose-700' },
-  { border: 'border-sky-300', bg: 'bg-sky-50', text: 'text-sky-700' },
-  { border: 'border-amber-300', bg: 'bg-amber-50', text: 'text-amber-700' },
-  { border: 'border-indigo-300', bg: 'bg-indigo-50', text: 'text-indigo-700' },
-]
 
 const HABITS = [
-  { key: 'meals', label: 'Posiłki', emoji: '🍽️', unit: '', placeholder: '0', step: '1' },
-  { key: 'water', label: 'Woda', emoji: '💧', unit: 'ml', placeholder: '0', step: '100' },
-  { key: 'exercise', label: 'Ćwiczenia', emoji: '🏃', unit: 'godz', placeholder: '0', step: '0.5' },
-  { key: 'sleep_hours', label: 'Sen', emoji: '😴', unit: 'godz', placeholder: '0', step: '0.5' },
-  { key: 'fasting_hours', label: 'Post', emoji: '⏱️', unit: 'godz', placeholder: '0', step: '1' },
+  { key: 'meals', label: 'Posiłki', emoji: '🍽️', unit: '', step: '1' },
+  { key: 'water', label: 'Woda', emoji: '💧', unit: 'ml', step: '100' },
+  { key: 'exercise', label: 'Ćwiczenia', emoji: '🏃', unit: 'godz', step: '0.5' },
+  { key: 'sleep_hours', label: 'Sen', emoji: '😴', unit: 'godz', step: '0.5' },
+  { key: 'fasting_hours', label: 'Post', emoji: '⏱️', unit: 'godz', step: '1' },
 ]
 
 function ValueCell({ value, habit, onChange }) {
@@ -53,7 +47,11 @@ function ValueCell({ value, habit, onChange }) {
         onChange={(e) => setTempVal(e.target.value)}
         onBlur={commitEdit}
         onKeyDown={(e) => { if (e.key === 'Enter') commitEdit() }}
-        className="w-full h-14 text-center text-lg font-bold border-2 border-emerald-400 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        className="w-full h-[3.25rem] text-center text-lg font-bold rounded-xl bg-white text-[color:var(--color-ink-900)] focus:outline-none"
+        style={{
+          boxShadow:
+            'inset 0 1px 2px rgba(6,95,70,0.08), inset 0 0 0 2px var(--color-brand-500), 0 0 0 3px rgba(16,185,129,0.18)',
+        }}
       />
     )
   }
@@ -61,19 +59,15 @@ function ValueCell({ value, habit, onChange }) {
   return (
     <button
       onClick={startEdit}
-      className={`w-full h-14 rounded-xl flex flex-col items-center justify-center transition-all active:scale-90 select-none ${
-        hasValue
-          ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200'
-          : 'border-2 border-stone-200 bg-white text-stone-300 active:border-emerald-400'
-      }`}
+      className={`value-cell focus-ring ${hasValue ? 'value-cell-filled' : 'value-cell-empty'}`}
     >
       {hasValue ? (
         <>
-          <span className="text-lg font-bold leading-none">{displayVal}</span>
-          {habit.unit && <span className="text-[10px] opacity-80 leading-none mt-0.5">{habit.unit}</span>}
+          <span className="text-lg font-bold leading-none tracking-tight">{displayVal}</span>
+          {habit.unit && <span className="text-[10px] opacity-85 leading-none mt-0.5 font-medium">{habit.unit}</span>}
         </>
       ) : (
-        <span className="text-xl leading-none">–</span>
+        <span className="text-xl leading-none font-bold">–</span>
       )}
     </button>
   )
@@ -114,83 +108,82 @@ export default function ActivityTracker() {
   if (loading) return <LoadingSpinner />
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="text-center mb-4">
-        <h1 className="text-2xl font-bold text-stone-800">Poczuj Luz 2026</h1>
-        <p className="text-stone-400 text-sm mt-1">Kliknij pole, wpisz wartość</p>
+    <div className="max-w-3xl mx-auto">
+      <div className="text-center mb-8">
+        <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-brand-600)] font-semibold mb-2">
+          Aktywność
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--color-ink-900)] tracking-tight">
+          Bez Cukru 2026
+        </h1>
+        <p className="text-[color:var(--color-ink-400)] text-sm mt-2">
+          Kliknij pole, aby dodać lub zaktualizować wartość
+        </p>
       </div>
 
-      {/* Week tabs */}
-      <div className="flex gap-2 mb-6">
-        {WEEKS.map((week, wi) => (
+      <div className="flex gap-2 mb-6 p-1.5 card-premium">
+        {WEEKS.map((week) => (
           <button
             key={week}
             onClick={() => setActiveWeek(week)}
-            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 select-none ${
-              activeWeek === week
-                ? `${WEEK_COLORS[wi].bg} ${WEEK_COLORS[wi].text} ${WEEK_COLORS[wi].border} border-2 shadow-sm`
-                : 'bg-white border border-stone-200 text-stone-400'
-            }`}
+            className={`tab-3d focus-ring ${activeWeek === week ? 'tab-3d-active' : ''}`}
           >
             Tydzień {week}
           </button>
         ))}
       </div>
 
-      {/* Desktop/tablet: table view */}
-      <div className="hidden sm:block">
-        <div className={`rounded-2xl border-2 ${WEEK_COLORS[activeWeek - 1].border} bg-white overflow-hidden shadow-sm`}>
-          <div className="grid grid-cols-8 border-b border-stone-100 bg-stone-50">
-            <div className="p-3" />
-            {DAYS_PL.map((d) => (
-              <div key={d} className="py-4 text-center text-sm font-bold text-stone-600">
-                {d}
-              </div>
-            ))}
-          </div>
-
-          {HABITS.map((habit, hi) => (
-            <div
-              key={habit.key}
-              className={`grid grid-cols-8 items-center gap-1 px-2 ${
-                hi < HABITS.length - 1 ? 'border-b border-dashed border-stone-100' : ''
-              }`}
-            >
-              <div className="py-3 px-1 text-center">
-                <div className="text-2xl leading-none">{habit.emoji}</div>
-                <div className="text-xs text-stone-500 mt-1 font-medium leading-tight">{habit.label}</div>
-                {habit.unit && <div className="text-[10px] text-stone-400">({habit.unit})</div>}
-              </div>
-              {Array.from({ length: 7 }, (_, dayIdx) => {
-                const log = getLog(activeWeek, dayIdx)
-                if (!log) return <div key={dayIdx} className="py-3" />
-                return (
-                  <div key={dayIdx} className="py-2 px-0.5">
-                    <ValueCell
-                      value={log[habit.key]}
-                      habit={habit}
-                      onChange={(val) => updateValue(log, habit.key, val)}
-                    />
-                  </div>
-                )
-              })}
+      <div className="hidden sm:block card-elevated overflow-hidden">
+        <div className="grid grid-cols-8 bg-gradient-to-b from-[color:var(--color-line-soft)] to-white border-b border-[color:var(--color-line)]">
+          <div className="p-3" />
+          {DAYS_PL.map((d) => (
+            <div key={d} className="py-3.5 text-center text-xs font-semibold text-[color:var(--color-ink-500)] uppercase tracking-wider">
+              {d}
             </div>
           ))}
         </div>
+
+        {HABITS.map((habit, hi) => (
+          <div
+            key={habit.key}
+            className={`grid grid-cols-8 items-center gap-1 px-2 ${
+              hi < HABITS.length - 1 ? 'border-b border-dashed border-[color:var(--color-line-soft)]' : ''
+            }`}
+          >
+            <div className="py-3 px-1 text-center">
+              <div className="text-2xl leading-none">{habit.emoji}</div>
+              <div className="text-xs text-[color:var(--color-ink-700)] mt-1.5 font-semibold leading-tight">
+                {habit.label}
+              </div>
+              {habit.unit && <div className="text-[10px] text-[color:var(--color-ink-300)] mt-0.5">({habit.unit})</div>}
+            </div>
+            {Array.from({ length: 7 }, (_, dayIdx) => {
+              const log = getLog(activeWeek, dayIdx)
+              if (!log) return <div key={dayIdx} className="py-3" />
+              return (
+                <div key={dayIdx} className="py-2 px-0.5">
+                  <ValueCell
+                    value={log[habit.key]}
+                    habit={habit}
+                    onChange={(val) => updateValue(log, habit.key, val)}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        ))}
       </div>
 
-      {/* Mobile: card per day */}
       <div className="sm:hidden space-y-3">
         {Array.from({ length: 7 }, (_, dayIdx) => {
           const log = getLog(activeWeek, dayIdx)
           if (!log) return null
           return (
-            <div
-              key={dayIdx}
-              className={`rounded-2xl border-2 ${WEEK_COLORS[activeWeek - 1].border} bg-white overflow-hidden shadow-sm`}
-            >
-              <div className={`px-4 py-3 ${WEEK_COLORS[activeWeek - 1].bg} border-b border-stone-100`}>
-                <h3 className={`font-bold ${WEEK_COLORS[activeWeek - 1].text}`}>{DAYS_FULL[dayIdx]}</h3>
+            <div key={dayIdx} className="card-elevated overflow-hidden">
+              <div className="px-4 py-3 bg-gradient-to-b from-[color:var(--color-line-soft)] to-white border-b border-[color:var(--color-line)]">
+                <h3 className="font-bold text-[color:var(--color-ink-900)] tracking-tight">
+                  {DAYS_FULL[dayIdx]}
+                </h3>
               </div>
               <div className="p-4 space-y-3">
                 {HABITS.map((habit) => (
@@ -198,8 +191,8 @@ export default function ActivityTracker() {
                     <div className="flex items-center gap-2 w-28 flex-shrink-0">
                       <span className="text-xl">{habit.emoji}</span>
                       <div>
-                        <div className="text-sm font-medium text-stone-700">{habit.label}</div>
-                        {habit.unit && <div className="text-[10px] text-stone-400">{habit.unit}</div>}
+                        <div className="text-sm font-semibold text-[color:var(--color-ink-700)]">{habit.label}</div>
+                        {habit.unit && <div className="text-[10px] text-[color:var(--color-ink-300)]">{habit.unit}</div>}
                       </div>
                     </div>
                     <div className="flex-1">

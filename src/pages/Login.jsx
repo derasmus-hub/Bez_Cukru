@@ -36,44 +36,44 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-surface)] px-4 py-8">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <img src="/erasmus-logo.png" alt="Erasmus Labs" className="h-16 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-stone-800">Poczuj Luz</h1>
-          <p className="text-stone-500 mt-1">
-            {isSignUp ? 'Utwórz nowe konto' : 'Zaloguj się'}
+          <img src="/erasmus-logo.png" alt="Erasmus Labs" className="h-14 w-14 mx-auto mb-4 rounded-xl shadow-sm" />
+          <h1 className="text-3xl font-bold text-[color:var(--color-ink-900)] tracking-tight">Bez Cukru</h1>
+          <p className="text-[color:var(--color-ink-500)] mt-1.5 text-sm">
+            {isSignUp ? 'Utwórz nowe konto' : 'Zaloguj się do swojego konta'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="card-elevated p-6 space-y-4">
           {isSignUp && (
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Imię</label>
+              <label className="block text-sm font-semibold text-[color:var(--color-ink-700)] mb-1.5">Imię</label>
               <input
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Twoje imię"
-                className="w-full px-3 py-2.5 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="input-premium"
               />
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Email</label>
+            <label className="block text-sm font-semibold text-[color:var(--color-ink-700)] mb-1.5">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="twoj@email.com"
               required
-              className="w-full px-3 py-2.5 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="input-premium"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Hasło</label>
+            <label className="block text-sm font-semibold text-[color:var(--color-ink-700)] mb-1.5">Hasło</label>
             <input
               type="password"
               value={password}
@@ -81,30 +81,40 @@ export default function Login() {
               placeholder="Minimum 6 znaków"
               required
               minLength={6}
-              className="w-full px-3 py-2.5 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="input-premium"
             />
           </div>
 
-          {error && <p className="text-red-600 text-sm">{error}</p>}
-          {success && <p className="text-emerald-600 text-sm">{success}</p>}
+          {error && (
+            <div className="rounded-lg bg-red-50 border border-red-100 px-3 py-2">
+              <p className="text-red-700 text-sm font-medium">{error}</p>
+            </div>
+          )}
+          {success && (
+            <div className="rounded-lg bg-[color:var(--color-brand-50)] border border-[color:var(--color-brand-100)] px-3 py-2">
+              <p className="text-[color:var(--color-brand-700)] text-sm font-medium">{success}</p>
+            </div>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-emerald-600 text-white py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:opacity-50"
+            className="btn btn-primary btn-lg btn-block"
           >
-            {loading ? '...' : isSignUp ? 'Utwórz konto' : 'Zaloguj się'}
+            {loading ? 'Ładowanie...' : isSignUp ? 'Utwórz konto' : 'Zaloguj się'}
           </button>
         </form>
 
         <button
           onClick={() => { setIsSignUp(!isSignUp); setError(''); setSuccess('') }}
-          className="w-full mt-4 text-sm text-stone-500 hover:text-emerald-600 transition-colors"
+          className="w-full mt-5 text-sm text-[color:var(--color-ink-500)] hover:text-[color:var(--color-brand-700)] transition-colors font-medium"
         >
           {isSignUp ? 'Masz już konto? Zaloguj się' : 'Nie masz konta? Utwórz je'}
         </button>
 
-        <p className="text-center text-stone-400 text-xs mt-6">Powered by Erasmus Labs</p>
+        <p className="text-center text-[color:var(--color-ink-400)] text-xs mt-6 tracking-wide">
+          Powered by <span className="font-semibold text-[color:var(--color-ink-500)]">Erasmus Labs</span>
+        </p>
       </div>
     </div>
   )

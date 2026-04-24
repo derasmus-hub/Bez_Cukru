@@ -40,43 +40,74 @@ export default function Challenge() {
   }
 
   const completedCount = days.filter((d) => d.completed).length
+  const pct = Math.round((completedCount / 30) * 100)
 
   if (loading) return <LoadingSpinner />
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-stone-800">30 Dni Bez Cukru</h1>
-        <p className="text-stone-400 text-sm italic mt-1">Metoda jedz i ćwicz</p>
-        <p className="text-emerald-600 font-bold text-lg mt-2">{completedCount} / 30</p>
-        <div className="w-full bg-stone-200 rounded-full h-3 mt-2">
-          <div
-            className="bg-emerald-500 h-3 rounded-full transition-all duration-300"
-            style={{ width: `${(completedCount / 30) * 100}%` }}
-          />
+    <div className="max-w-xl mx-auto">
+      <div className="text-center mb-8">
+        <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-brand-600)] font-semibold mb-2">
+          Wyzwanie
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--color-ink-900)] tracking-tight">
+          30 Dni Bez Cukru
+        </h1>
+        <p className="text-[color:var(--color-ink-400)] text-sm mt-2">
+          Metoda jedz i ćwicz
+        </p>
+      </div>
+
+      <div className="card-elevated p-6 sm:p-8 mb-8">
+        <div className="flex items-baseline justify-between mb-3">
+          <div>
+            <p className="text-sm font-medium text-[color:var(--color-ink-500)]">Twój postęp</p>
+            <p className="text-3xl font-bold text-[color:var(--color-ink-900)] mt-1 tracking-tight">
+              {completedCount}
+              <span className="text-[color:var(--color-ink-300)] text-xl font-semibold"> / 30</span>
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm font-medium text-[color:var(--color-ink-500)]">Ukończono</p>
+            <p className="text-3xl font-bold text-[color:var(--color-brand-600)] mt-1 tracking-tight">
+              {pct}%
+            </p>
+          </div>
+        </div>
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width: `${pct}%` }} />
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-2">
-        {days.map((day) => (
-          <button
-            key={day.id}
-            onClick={() => toggleDay(day)}
-            className={`aspect-square rounded-full flex items-center justify-center text-base font-bold transition-all duration-150 active:scale-90 select-none ${
-              day.completed
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200'
-                : 'bg-white border-2 border-stone-200 text-stone-400 active:border-emerald-400'
-            }`}
-          >
-            {day.completed ? '✓' : day.day_number}
-          </button>
-        ))}
+      <div className="card-premium p-5 sm:p-6">
+        <div className="grid grid-cols-5 sm:grid-cols-6 gap-2.5 sm:gap-3">
+          {days.map((day) => (
+            <button
+              key={day.id}
+              onClick={() => toggleDay(day)}
+              aria-label={`Dzień ${day.day_number}${day.completed ? ' ukończony' : ''}`}
+              className={`day-circle focus-ring ${day.completed ? 'day-circle-done' : 'day-circle-todo'}`}
+            >
+              {day.completed ? (
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                day.day_number
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
       {completedCount === 30 && (
-        <div className="mt-6 bg-emerald-50 rounded-xl p-4 text-center border border-emerald-200">
-          <p className="text-lg font-bold text-emerald-700">Gratulacje! 🎉</p>
-          <p className="text-emerald-600 text-sm mt-1">30 dni bez cukru!</p>
+        <div className="mt-8 card-elevated p-6 text-center bg-gradient-to-b from-[color:var(--color-brand-50)] to-white">
+          <p className="text-2xl font-bold text-[color:var(--color-brand-700)] tracking-tight">
+            Gratulacje! 🎉
+          </p>
+          <p className="text-[color:var(--color-brand-600)] text-sm mt-1 font-medium">
+            30 dni bez cukru — udało Ci się!
+          </p>
         </div>
       )}
     </div>

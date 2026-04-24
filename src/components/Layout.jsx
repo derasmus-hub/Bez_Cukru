@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
 const NAV_LINKS = [
-  { to: '/', label: 'Wyzwanie 30 Dni' },
+  { to: '/', label: 'Wyzwanie' },
   { to: '/aktywnosc', label: 'Aktywność' },
   { to: '/zakupy', label: 'Zakupy' },
   { to: '/tablica', label: 'Tablica' },
@@ -14,47 +14,43 @@ export default function Layout({ children }) {
   const { user, signOut } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const displayName = user?.user_metadata?.display_name || user?.email
+
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50">
-      <header className="bg-white border-b border-stone-200 sticky top-0 z-50">
+    <div className="min-h-screen flex flex-col bg-[var(--color-surface)]">
+      <header className="bg-white/80 backdrop-blur-md border-b border-[color:var(--color-line)] sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/erasmus-logo.png" alt="Erasmus Labs" className="h-8" />
-            <span className="font-bold text-stone-800 text-lg">Poczuj Luz</span>
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <img src="/erasmus-logo.png" alt="Erasmus Labs" className="h-8 w-8 rounded-lg" />
+            <div className="flex flex-col leading-none">
+              <span className="font-bold text-[color:var(--color-ink-900)] text-[17px] tracking-tight">Bez Cukru</span>
+              <span className="text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-ink-300)] font-medium mt-0.5">Erasmus Labs</span>
+            </div>
           </Link>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === link.to
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'text-stone-600 hover:bg-stone-100'
-                }`}
+                className={`nav-pill ${location.pathname === link.to ? 'nav-pill-active' : ''}`}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="ml-2 pl-2 border-l border-stone-200 flex items-center gap-2">
-              <span className="text-xs text-stone-400 max-w-[120px] truncate">
-                {user?.user_metadata?.display_name || user?.email}
+            <div className="ml-3 pl-3 border-l border-[color:var(--color-line)] flex items-center gap-2">
+              <span className="text-xs text-[color:var(--color-ink-400)] max-w-[140px] truncate font-medium">
+                {displayName}
               </span>
-              <button
-                onClick={signOut}
-                className="text-xs text-stone-400 hover:text-red-600 transition-colors px-2 py-1 rounded"
-              >
+              <button onClick={signOut} className="btn btn-danger-ghost btn-sm">
                 Wyloguj
               </button>
             </div>
           </div>
 
-          {/* Mobile hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 text-stone-600 hover:bg-stone-100 rounded-lg"
+            className="md:hidden p-2 text-[color:var(--color-ink-500)] hover:bg-black/5 rounded-lg"
             aria-label="Toggle menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,31 +63,25 @@ export default function Layout({ children }) {
           </button>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
-          <nav className="md:hidden border-t border-stone-200 bg-white px-4 pb-3">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setMenuOpen(false)}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium mt-1 ${
-                  location.pathname === link.to
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'text-stone-600 hover:bg-stone-100'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="mt-2 pt-2 border-t border-stone-100 flex items-center justify-between px-3">
-              <span className="text-xs text-stone-400 truncate">
-                {user?.user_metadata?.display_name || user?.email}
+          <nav className="md:hidden border-t border-[color:var(--color-line)] bg-white px-4 py-3">
+            <div className="flex flex-col gap-1">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMenuOpen(false)}
+                  className={`nav-pill ${location.pathname === link.to ? 'nav-pill-active' : ''}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <div className="mt-3 pt-3 border-t border-[color:var(--color-line-soft)] flex items-center justify-between px-1">
+              <span className="text-xs text-[color:var(--color-ink-400)] truncate font-medium">
+                {displayName}
               </span>
-              <button
-                onClick={() => { signOut(); setMenuOpen(false) }}
-                className="text-xs text-red-500 font-medium"
-              >
+              <button onClick={() => { signOut(); setMenuOpen(false) }} className="btn btn-danger-ghost btn-sm">
                 Wyloguj
               </button>
             </div>
@@ -99,12 +89,14 @@ export default function Layout({ children }) {
         )}
       </header>
 
-      <main className="flex-1 max-w-5xl mx-auto px-4 py-6 w-full">
+      <main className="flex-1 max-w-5xl mx-auto px-4 py-8 md:py-10 w-full">
         {children}
       </main>
 
-      <footer className="border-t border-stone-200 bg-white py-4">
-        <p className="text-center text-stone-400 text-sm">Powered by Erasmus Labs</p>
+      <footer className="border-t border-[color:var(--color-line)] bg-white/60 py-5">
+        <p className="text-center text-[color:var(--color-ink-400)] text-xs tracking-wide">
+          Powered by <span className="font-semibold text-[color:var(--color-ink-500)]">Erasmus Labs</span>
+        </p>
       </footer>
     </div>
   )
