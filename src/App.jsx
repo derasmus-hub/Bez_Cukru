@@ -3,9 +3,6 @@ import { AuthProvider, useAuth } from './hooks/useAuth'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Challenge from './pages/Challenge'
-import ActivityTracker from './pages/ActivityTracker'
-import ShoppingList from './pages/ShoppingList'
-import Leaderboard from './pages/Leaderboard'
 import LoadingSpinner from './components/ui/LoadingSpinner'
 
 function ProtectedRoutes() {
@@ -13,7 +10,7 @@ function ProtectedRoutes() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-surface)]">
         <LoadingSpinner />
       </div>
     )
@@ -25,9 +22,6 @@ function ProtectedRoutes() {
     <Layout>
       <Routes>
         <Route path="/" element={<Challenge />} />
-        <Route path="/aktywnosc" element={<ActivityTracker />} />
-        <Route path="/zakupy" element={<ShoppingList />} />
-        <Route path="/tablica" element={<Leaderboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
